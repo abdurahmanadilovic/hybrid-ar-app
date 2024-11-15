@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.abdu.hybridarapp'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.abdu.hybridarapp"
@@ -62,9 +62,11 @@ dependencies {
 
     // ar
     implementation libs.sceneview.android
+    implementation libs.arsceneview.android
     implementation libs.material
 
     // di
+    implementation libs.koin.android
 
 
     testImplementation libs.junit
