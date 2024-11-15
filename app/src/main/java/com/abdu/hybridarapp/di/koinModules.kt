@@ -4,17 +4,17 @@ import com.abdu.hybridarapp.data.ApiService
 import com.abdu.hybridarapp.data.ApiServiceImpl
 import com.abdu.hybridarapp.data.NodesRepository
 import com.abdu.hybridarapp.data.NodesRepositoryImpl
-import com.abdu.hybridarapp.domain.AddCubeToView
-import com.abdu.hybridarapp.domain.CreateAndAddCube
-import com.abdu.hybridarapp.domain.GetInitialWorldPosition
+import com.abdu.hybridarapp.domain.*
+import com.abdu.hybridarapp.viewmodel.PlacementViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val domainModule = module {
-    singleOf(::GetInitialWorldPosition)
-    singleOf(::CreateAndAddCube)
-    singleOf(::AddCubeToView)
+    singleOf(::GetInitialWorldPositionImpl) { bind<GetInitialWorldPositionUseCase>() }
+    singleOf(::CreateAndAddCubeImpl) { bind<CreateAndAddCubeUseCase>() }
+    singleOf(::AddCubeToViewImpl) { bind<AddCubeToViewUseCase>() }
 }
 
 val networkModule = module {
@@ -22,7 +22,12 @@ val networkModule = module {
     singleOf(::NodesRepositoryImpl) { bind<NodesRepository>() }
 }
 
+val presentationModule = module {
+    viewModelOf(::PlacementViewModel)
+}
+
 val koinModules = listOf(
     domainModule,
     networkModule,
+    presentationModule
 )

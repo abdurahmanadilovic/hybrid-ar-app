@@ -3,12 +3,14 @@ package com.abdu.hybridarapp.domain
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 
-class CreateAndAddCube(private val getInitialWorldPosition: GetInitialWorldPosition) {
-    suspend operator fun invoke(tapLocation: Position3d): DomainCube {
+class CreateAndAddCubeImpl(
+    private val getInitialWorldPosition: GetInitialWorldPositionUseCase
+) : CreateAndAddCubeUseCase {
+    override suspend operator fun invoke(tapLocation: Position3d): DomainCube {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomName = (1..8).map { chars.random() }.joinToString("")
 
-        val newLocation = Position3d.combine(getInitialWorldPosition.invoke(), tapLocation)
+        val newLocation = Position3d.combine(getInitialWorldPosition(), tapLocation)
 
         val color = Color(
             red = Random.nextFloat(),

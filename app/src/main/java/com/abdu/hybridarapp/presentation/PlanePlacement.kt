@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.abdu.hybridarapp.R
 import com.abdu.hybridarapp.databinding.FragmentPlanePlacementBinding
@@ -23,6 +22,7 @@ import io.github.sceneview.node.CubeNode
 import io.github.sceneview.node.Node
 import io.github.sceneview.utils.worldToScreen
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.atan2
 
 class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
@@ -30,7 +30,7 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
     private var _binding: FragmentPlanePlacementBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: PlacementViewModel by viewModels()
+    private val viewModel: PlacementViewModel by viewModel<PlacementViewModel>()
     private val cubeNodes = mutableMapOf<String, CubeNode>()
     private lateinit var materialLoader: MaterialLoader
 

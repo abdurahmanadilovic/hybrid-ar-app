@@ -3,11 +3,7 @@ package com.abdu.hybridarapp.viewmodel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abdu.hybridarapp.data.ApiServiceImpl
-import com.abdu.hybridarapp.data.NodesRepositoryImpl
-import com.abdu.hybridarapp.domain.AddCubeToView
-import com.abdu.hybridarapp.domain.CreateAndAddCube
-import com.abdu.hybridarapp.domain.GetInitialWorldPosition
+import com.abdu.hybridarapp.domain.AddCubeToViewUseCase
 import com.abdu.hybridarapp.model.CubeData
 import com.abdu.hybridarapp.model.DomainCubeMapper
 import com.abdu.hybridarapp.presentation.Float3Mapper
@@ -16,24 +12,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PlacementViewModel : ViewModel() {
+class PlacementViewModel(private val addCubeToViewUseCase: AddCubeToViewUseCase) : ViewModel() {
     private val _state = MutableStateFlow(ARViewState())
     val state: StateFlow<ARViewState> = _state
-    lateinit var addCubeToView: AddCubeToView
-
-    init {
-        addCubeToView = AddCubeToView(
-            CreateAndAddCube(
-                GetInitialWorldPosition(
-                    NodesRepositoryImpl(ApiServiceImpl())
-                )
-            )
-        )
-    }
 
     fun placeCube(position: Float3) {
         viewModelScope.launch {
-            val newDomainCube = addCubeToView(Float3Mapper.toPosition3d(position))
+            val newDomainCube = addCubeToViewUseCase(Float3Mapper.toPosition3d(position))
             val newUICube = DomainCubeMapper.toCubeData(newDomainCube)
             _state.value = _state.value.copy(
                 cubes = _state.value.cubes + listOf(newUICube)
