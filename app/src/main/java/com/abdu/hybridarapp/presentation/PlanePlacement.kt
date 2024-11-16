@@ -175,12 +175,14 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                 val arrowCenterX = parentView.x
                 val arrowCenterY = parentView.y + parentView.height / 2
 
-                val deltaX = nodeScreenPos.x - arrowCenterX
-                val deltaY = nodeScreenPos.y - arrowCenterY
-
-                val angle = atan2(deltaY.toDouble(), deltaX.toDouble())
-
-                arrowView.rotation = Math.toDegrees(angle).toFloat() //-90f
+                viewModel.updateArrowAngle(
+                    arrowCenterX,
+                    arrowCenterY,
+                    nodeScreenPos.x,
+                    nodeScreenPos.y
+                )
+                
+                arrowView.rotation = viewModel.state.value.arrowAngle
             }
         }
     }

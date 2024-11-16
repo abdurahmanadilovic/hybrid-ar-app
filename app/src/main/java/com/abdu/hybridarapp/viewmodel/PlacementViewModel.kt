@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abdu.hybridarapp.domain.AddCubeToViewUseCase
+import com.abdu.hybridarapp.domain.CalculateArrowAngleUseCase
 import com.abdu.hybridarapp.model.CubeData
 import com.abdu.hybridarapp.model.DomainCubeMapper
 import com.abdu.hybridarapp.presentation.Float3Mapper
@@ -12,7 +13,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PlacementViewModel(private val addCubeToViewUseCase: AddCubeToViewUseCase) : ViewModel() {
+class PlacementViewModel(
+    private val addCubeToViewUseCase: AddCubeToViewUseCase,
+    private val calculateArrowAngleUseCase: CalculateArrowAngleUseCase
+) : ViewModel() {
     private val _state = MutableStateFlow(ARViewState())
     val state: StateFlow<ARViewState> = _state
 
@@ -39,6 +43,21 @@ class PlacementViewModel(private val addCubeToViewUseCase: AddCubeToViewUseCase)
             } else cube
         }
         _state.value = _state.value.copy(cubes = updatedCubes)
+    }
+
+    fun updateArrowAngle(
+        arrowCenterX: Float,
+        arrowCenterY: Float,
+        targetX: Float,
+        targetY: Float
+    ) {
+        val angle = calculateArrowAngleUseCase(
+            arrowCenterX,
+            arrowCenterY,
+            targetX,
+            targetY
+        )
+        _state.value = _state.value.copy(arrowAngle = angle)
     }
 }
 
