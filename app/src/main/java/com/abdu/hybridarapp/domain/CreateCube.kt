@@ -12,11 +12,14 @@ class CreateAndAddCubeImpl(
 
         val newLocation = Position3d.combine(getInitialWorldPosition(), tapLocation)
 
-        val color = Color(
-            red = Random.nextFloat(),
-            green = Random.nextFloat(),
-            blue = Random.nextFloat()
-        )
+        val color = when (Random.nextInt(5)) {
+            0 -> Color.Red
+            1 -> Color.Green
+            2 -> Color.Blue
+            3 -> Color.Yellow
+            else -> Color.Magenta
+        }
+
 
         return DomainCube(name = randomName, position = newLocation, color = color)
     }
