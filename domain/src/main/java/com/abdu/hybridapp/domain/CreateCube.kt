@@ -1,6 +1,5 @@
-package com.abdu.hybridarapp.domain
+package com.abdu.hybridapp.domain
 
-import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 
 class CreateAndAddCubeImpl(

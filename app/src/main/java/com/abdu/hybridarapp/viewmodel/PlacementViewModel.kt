@@ -3,9 +3,9 @@ package com.abdu.hybridarapp.viewmodel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abdu.hybridarapp.domain.AddCubeToViewUseCase
-import com.abdu.hybridarapp.domain.CalculateArrowAngleUseCase
-import com.abdu.hybridarapp.domain.GetInitialWorldPositionUseCase
+import com.abdu.hybridapp.domain.AddCubeToViewUseCase
+import com.abdu.hybridapp.domain.CalculateArrowAngleUseCase
+import com.abdu.hybridapp.domain.GetInitialWorldPositionUseCase
 import com.abdu.hybridarapp.model.CubeData
 import com.abdu.hybridarapp.model.DomainCubeMapper
 import com.abdu.hybridarapp.presentation.Float3Mapper
@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PlacementViewModel(
-    private val addCubeToViewUseCase: AddCubeToViewUseCase,
-    private val getInitialWorldPositionUseCase: GetInitialWorldPositionUseCase,
-    private val calculateArrowAngleUseCase: CalculateArrowAngleUseCase
+    private val addCubeToViewUseCase: com.abdu.hybridapp.domain.AddCubeToViewUseCase,
+    private val getInitialWorldPositionUseCase: com.abdu.hybridapp.domain.GetInitialWorldPositionUseCase,
+    private val calculateArrowAngleUseCase: com.abdu.hybridapp.domain.CalculateArrowAngleUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ARViewState())
     val state: StateFlow<ARViewState> = _state

@@ -1,6 +1,4 @@
-package com.abdu.hybridarapp.domain
-
-import com.abdu.hybridarapp.data.NodesRepository
+package com.abdu.hybridapp.domain
 
 class GetInitialWorldPositionImpl(
     private val nodesRepository: NodesRepository

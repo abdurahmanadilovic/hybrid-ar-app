@@ -1,8 +1,8 @@
-package com.abdu.hybridarapp.domain
+package com.abdu.hybridapp.domain
 
 import kotlin.math.atan2
 
-class CalculateArrowAngleImpl : CalculateArrowAngleUseCase {
+class CalculateArrowAngle : CalculateArrowAngleUseCase {
     override fun invoke(
         arrowCenterX: Float,
         arrowCenterY: Float,

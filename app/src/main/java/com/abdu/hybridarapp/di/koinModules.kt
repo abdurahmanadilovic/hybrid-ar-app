@@ -1,9 +1,8 @@
 package com.abdu.hybridarapp.di
 
+import com.abdu.hybridapp.domain.*
 import com.abdu.hybridarapp.data.ApiService
-import com.abdu.hybridarapp.data.NodesRepository
 import com.abdu.hybridarapp.data.NodesRepositoryImpl
-import com.abdu.hybridarapp.domain.*
 import com.abdu.hybridarapp.viewmodel.PlacementViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,7 +17,7 @@ val domainModule = module {
     singleOf(::GetInitialWorldPositionImpl) { bind<GetInitialWorldPositionUseCase>() }
     singleOf(::CreateAndAddCubeImpl) { bind<CreateAndAddCubeUseCase>() }
     singleOf(::AddCubeToViewImpl) { bind<AddCubeToViewUseCase>() }
-    singleOf(::CalculateArrowAngleImpl) { bind<CalculateArrowAngleUseCase>() }
+    singleOf(::CalculateArrowAngle) { bind<CalculateArrowAngleUseCase>() }
 }
 
 val networkModule = module {

@@ -1,4 +1,4 @@
-package com.abdu.hybridarapp.domain
+package com.abdu.hybridapp.domain
 
 interface GetInitialWorldPositionUseCase {
     suspend operator fun invoke(): Position3d

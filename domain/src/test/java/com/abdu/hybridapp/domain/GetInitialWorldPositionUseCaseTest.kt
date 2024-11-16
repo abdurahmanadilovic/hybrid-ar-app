@@ -1,9 +1,5 @@
-package com.abdu.hybridarapp
+package com.abdu.hybridapp.domain
 
-import com.abdu.hybridarapp.data.NodesRepository
-import com.abdu.hybridarapp.domain.DomainCube
-import com.abdu.hybridarapp.domain.GetInitialWorldPositionImpl
-import com.abdu.hybridarapp.domain.Position3d
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

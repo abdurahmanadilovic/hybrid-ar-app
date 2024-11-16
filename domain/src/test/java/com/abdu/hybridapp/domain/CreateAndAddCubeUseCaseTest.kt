@@ -1,8 +1,5 @@
-package com.abdu.hybridarapp
+package com.abdu.hybridapp.domain
 
-import com.abdu.hybridarapp.domain.CreateAndAddCubeImpl
-import com.abdu.hybridarapp.domain.GetInitialWorldPositionUseCase
-import com.abdu.hybridarapp.domain.Position3d
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

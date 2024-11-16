@@ -1,12 +1,11 @@
-package com.abdu.hybridarapp
+package com.abdu.hybridapp.domain
 
-import com.abdu.hybridarapp.domain.CalculateArrowAngleImpl
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.roundToInt
 
 class CalculateArrowAngleUseCaseTest {
-    private val calculateArrowAngle = CalculateArrowAngleImpl()
+    private val calculateArrowAngle = CalculateArrowAngle()
 
     @Test
     fun `when target is to the right, angle should be 0 degrees`() {

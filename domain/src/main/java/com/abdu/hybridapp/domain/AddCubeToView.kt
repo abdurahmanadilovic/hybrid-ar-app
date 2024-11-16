@@ -1,4 +1,4 @@
-package com.abdu.hybridarapp.domain
+package com.abdu.hybridapp.domain
 
 class AddCubeToViewImpl(
     private val createAndAddCube: CreateAndAddCubeUseCase
