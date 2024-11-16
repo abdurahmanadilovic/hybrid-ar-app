@@ -20,7 +20,7 @@ class GetInitialCameraOriginTest {
 class MockNodesRepo : NodesRepository {
     var cameraOrigin: Position3d =
         Position3d(0.0f, 0.0f, 0.0f)
-    private var cubes: List<DomainCube> = emptyList()
+    private var cubes: List<Cube> = emptyList()
 
     override suspend fun getInitialPosition(): Position3d {
         return cameraOrigin

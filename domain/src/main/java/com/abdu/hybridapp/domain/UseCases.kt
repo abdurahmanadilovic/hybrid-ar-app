@@ -5,11 +5,11 @@ interface GetInitialWorldPositionUseCase {
 }
 
 interface CreateAndAddCubeUseCase {
-    suspend operator fun invoke(tapLocation: Position3d): DomainCube
+    suspend operator fun invoke(tapLocation: Position3d): Cube
 }
 
 interface AddCubeToViewUseCase {
-    suspend operator fun invoke(tapLocation: Position3d): DomainCube
+    suspend operator fun invoke(tapLocation: Position3d): Cube
 }
 
 interface CalculateArrowAngleUseCase {

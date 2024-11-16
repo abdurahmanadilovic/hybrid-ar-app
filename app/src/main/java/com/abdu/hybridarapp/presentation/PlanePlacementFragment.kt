@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.abdu.hybridarapp.R
 import com.abdu.hybridarapp.databinding.FragmentPlanePlacementBinding
-import com.abdu.hybridarapp.model.CubeData
-import com.abdu.hybridarapp.viewmodel.ARViewState
-import com.abdu.hybridarapp.viewmodel.PlacementViewModel
+import com.abdu.hybridarapp.model.CubeUIModel
 import com.google.ar.core.Config
 import dev.romainguy.kotlin.math.Float3
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
@@ -24,7 +22,7 @@ import io.github.sceneview.utils.worldToScreen
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
+class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
 
     private var _binding: FragmentPlanePlacementBinding? = null
     private val binding get() = _binding!!
@@ -49,12 +47,15 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                         binding.contentGroup.visibility = View.GONE
                         binding.errorGroup.visibility = View.GONE
                     }
+
                     config.error != null -> {
                         binding.loadingGroup.visibility = View.GONE
                         binding.contentGroup.visibility = View.GONE
                         binding.errorGroup.visibility = View.VISIBLE
-                        binding.errorText.text = config.error.message ?: "An error occurred"
+                        binding.errorText.text =
+                            config.error.message ?: getString(R.string.an_error_occurred)
                     }
+
                     config.cameraOrigin != null -> {
                         binding.loadingGroup.visibility = View.GONE
                         binding.errorGroup.visibility = View.GONE
@@ -127,7 +128,8 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
         if (state.selectedCube != null) {
             binding.cubeInfoCard.visibility = View.VISIBLE
             binding.cubeNameText.text = state.selectedCube.name
-            binding.cubePositionText.text = "X: %.2f, Y: %.2f, Z: %.2f".format(
+            binding.cubePositionText.text = getString(
+                R.string.format_3d_position,
                 state.selectedCube.position.x,
                 state.selectedCube.position.y,
                 state.selectedCube.position.z
@@ -143,7 +145,7 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
         }
     }
 
-    private fun updateCubes(cubes: List<CubeData>) {
+    private fun updateCubes(cubes: List<CubeUIModel>) {
         // Remove any cubes that are no longer in the list
         val cubesToRemove = cubeNodes.keys.filter { cubeId ->
             !cubes.any { it.id == cubeId }
@@ -169,7 +171,8 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                         viewModel.selectCube(cubeData.name)
                         true
                     }
-                    materialInstance = materialLoader.createColorInstance(color = cubeData.color)
+                    materialInstance =
+                        materialLoader.createColorInstance(color = cubeData.color, 0f, 0f, 0f)
                 }
                 binding.sceneView.addChildNode(cubeNode)
                 cubeNodes[cubeData.name] = cubeNode

@@ -2,4 +2,6 @@
     <string name="app_name">HybridArApp</string>
     <string name="failed_to_initialize_ar">Failed to initialize AR</string>
     <string name="retry">Retry</string>
+    <string name="an_error_occurred">An error occurred</string>
+    <string name="format_3d_position">X: %.2f, Y: %.2f, Z: %.2f</string>
 </resources>

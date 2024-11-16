@@ -1,11 +1,11 @@
-package com.abdu.hybridarapp.viewmodel
+package com.abdu.hybridarapp.presentation
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abdu.hybridarapp.model.CubeData
+import com.abdu.hybridarapp.model.CubeUIModel
 import com.abdu.hybridarapp.model.DomainCubeMapper
-import com.abdu.hybridarapp.presentation.Float3Mapper
+import com.abdu.hybridarapp.model.Position3dMapper
 import dev.romainguy.kotlin.math.Float3
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +32,7 @@ class PlacementViewModel(
                 _configState.value = _configState.value.copy(isLoading = true)
                 val cameraOrigin = getInitialWorldPositionUseCase()
                 _configState.value = ConfigState(
-                    cameraOrigin = Float3Mapper.toFloat3(cameraOrigin),
+                    cameraOrigin = Position3dMapper.toFloat3(cameraOrigin),
                     isLoading = false
                 )
             } catch (ex: Exception) {
@@ -51,8 +51,8 @@ class PlacementViewModel(
 
     fun placeCube(position: Float3) {
         viewModelScope.launch {
-            val newDomainCube = addCubeToViewUseCase(Float3Mapper.toPosition3d(position))
-            val newUICube = DomainCubeMapper.toCubeData(newDomainCube)
+            val newDomainCube = addCubeToViewUseCase(Position3dMapper.from(position))
+            val newUICube = DomainCubeMapper.toCubeUIModel(newDomainCube)
             _state.value = _state.value.copy(
                 cubes = _state.value.cubes + listOf(newUICube)
             )
@@ -91,8 +91,8 @@ class PlacementViewModel(
 }
 
 data class ARViewState(
-    val cubes: List<CubeData> = emptyList(),
-    val selectedCube: CubeData? = null,
+    val cubes: List<CubeUIModel> = emptyList(),
+    val selectedCube: CubeUIModel? = null,
     val arrowAngle: Float = 0f,
 )
 

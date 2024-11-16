@@ -5,7 +5,7 @@ import kotlin.random.Random
 class CreateAndAddCubeImpl(
     private val getInitialWorldPosition: GetInitialWorldPositionUseCase
 ) : CreateAndAddCubeUseCase {
-    override suspend operator fun invoke(tapLocation: Position3d): DomainCube {
+    override suspend operator fun invoke(tapLocation: Position3d): Cube {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomName = (1..8).map { chars.random() }.joinToString("")
 
@@ -20,6 +20,6 @@ class CreateAndAddCubeImpl(
         }
 
 
-        return DomainCube(name = randomName, position = newLocation, color = color)
+        return Cube(name = randomName, position = newLocation, color = color)
     }
 }

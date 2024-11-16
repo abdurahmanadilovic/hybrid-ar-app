@@ -20,14 +20,14 @@ data class Color(val red: Float, val green: Float, val blue: Float) {
     }
 }
 
-data class DomainCube(val name: String, val position: Position3d, val color: Color) {
+data class Cube(val name: String, val position: Position3d, val color: Color) {
     fun isEmpty(): Boolean {
         return this.name == "empty"
     }
 
     companion object {
-        fun empty(): DomainCube {
-            return DomainCube("empty", Position3d(0f, 0f, 0f), Color.White)
+        fun empty(): Cube {
+            return Cube("empty", Position3d(0f, 0f, 0f), Color.White)
         }
     }
 }

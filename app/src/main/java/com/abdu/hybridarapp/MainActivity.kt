@@ -3,7 +3,7 @@ package com.abdu.hybridarapp
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
-import com.abdu.hybridarapp.presentation.PlanePlacement
+import com.abdu.hybridarapp.presentation.PlanePlacementFragment
 
 class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +11,7 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.commit {
-            add(R.id.containerFragment, PlanePlacement::class.java, Bundle())
+            add(R.id.containerFragment, PlanePlacementFragment::class.java, Bundle())
         }
     }
 }

@@ -3,7 +3,7 @@ package com.abdu.hybridarapp.di
 import com.abdu.hybridapp.domain.*
 import com.abdu.hybridapp.data.ApiService
 import com.abdu.hybridapp.data.NodesRepositoryImpl
-import com.abdu.hybridarapp.viewmodel.PlacementViewModel
+import com.abdu.hybridarapp.presentation.PlacementViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.dsl.bind
