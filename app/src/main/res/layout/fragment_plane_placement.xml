@@ -43,7 +43,7 @@
                 android:id="@+id/errorText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Failed to initialize AR"
+                android:text="@string/failed_to_initialize_ar"
                 />
 
             <Button
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Retry" />
+                android:text="@string/retry" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

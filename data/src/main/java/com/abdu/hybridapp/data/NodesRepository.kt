@@ -1,4 +1,4 @@
-package com.abdu.hybridarapp.data
+package com.abdu.hybridapp.data
 
 import com.abdu.hybridapp.domain.NodesRepository
 

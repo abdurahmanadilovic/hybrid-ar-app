@@ -1,8 +1,8 @@
 package com.abdu.hybridarapp.di
 
 import com.abdu.hybridapp.domain.*
-import com.abdu.hybridarapp.data.ApiService
-import com.abdu.hybridarapp.data.NodesRepositoryImpl
+import com.abdu.hybridapp.data.ApiService
+import com.abdu.hybridapp.data.NodesRepositoryImpl
 import com.abdu.hybridarapp.viewmodel.PlacementViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
