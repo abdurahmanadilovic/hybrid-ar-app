@@ -6,8 +6,10 @@ interface NodesRepository {
     suspend fun getInitialPosition(): Position3d
 }
 
-class NodesRepositoryImpl(private val apiService: ApiService) : NodesRepository {
-    private var initialPosition: Position3d? = null
+class NodesRepositoryImpl(
+    private val apiService: ApiService
+) : NodesRepository {
+    private var initialPosition: Position3d? = Position3d(0f, 0f, 0f)
 
     private fun saveInitialPosition(position: Position3d) {
         initialPosition = position

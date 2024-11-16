@@ -23,7 +23,6 @@ import io.github.sceneview.node.Node
 import io.github.sceneview.utils.worldToScreen
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.atan2
 
 class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
 
@@ -37,23 +36,48 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPlanePlacementBinding.bind(view)
-        setupSceneView()
         setupUI()
-        observeState()
+        observeConfigState()
     }
 
-    private fun setupSceneView() {
+    private fun observeConfigState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.configState.collect { config ->
+                when {
+                    config.isLoading -> {
+                        binding.loadingGroup.visibility = View.VISIBLE
+                        binding.contentGroup.visibility = View.GONE
+                        binding.errorGroup.visibility = View.GONE
+                    }
+                    config.error != null -> {
+                        binding.loadingGroup.visibility = View.GONE
+                        binding.contentGroup.visibility = View.GONE
+                        binding.errorGroup.visibility = View.VISIBLE
+                        binding.errorText.text = config.error.message ?: "An error occurred"
+                    }
+                    config.cameraOrigin != null -> {
+                        binding.loadingGroup.visibility = View.GONE
+                        binding.errorGroup.visibility = View.GONE
+                        binding.contentGroup.visibility = View.VISIBLE
+                        setupSceneView(config.cameraOrigin)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupSceneView(cameraOrigin: Float3) {
         materialLoader = MaterialLoader(binding.sceneView.engine, requireContext())
         binding.sceneView.apply {
             configureSession { session, config ->
                 config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
-                config.focusMode = Config.FocusMode.AUTO
-                config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
                 config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
-                config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
+                config.lightEstimationMode = Config.LightEstimationMode.DISABLED
             }
+            cameraNode.position = cameraOrigin
             onFrame = {
                 updateUI(viewModel.state.value)
+                updateCubes(viewModel.state.value.cubes)
             }
             planeRenderer.isVisible = true
 
@@ -70,6 +94,10 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
     }
 
     private fun setupUI() {
+        binding.retryButton.setOnClickListener {
+            viewModel.retryInitialization()
+        }
+
         binding.addCubeButton.setOnClickListener {
             val planes = binding.sceneView.frame?.getUpdatedPlanes()
             planes?.firstOrNull()?.let {
@@ -79,24 +107,19 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
         }
 
         binding.colorCircle1.setOnClickListener {
-            viewModel.changeCubeColor(Color.Red)
+            viewModel.changeSelectedCubeColor(Color.Red)
         }
 
         binding.colorCircle2.setOnClickListener {
-            viewModel.changeCubeColor(Color.Green)
+            viewModel.changeSelectedCubeColor(Color.Green)
         }
 
         binding.colorCircle3.setOnClickListener {
-            viewModel.changeCubeColor(Color.Blue)
+            viewModel.changeSelectedCubeColor(Color.Blue)
         }
-    }
 
-    private fun observeState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                updateUI(state)
-                updateCubes(state.cubes)
-            }
+        binding.cubeInfoCard.setOnClickListener {
+            // prevent frame interaction
         }
     }
 
@@ -109,17 +132,15 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                 state.selectedCube.position.y,
                 state.selectedCube.position.z
             )
-            rotateArrowToNode(
+            binding.directionArrow.rotation = viewModel.state.value.arrowAngle
+            getNextArrowAngle(
                 parentView = binding.cubeInfoCard,
-                arrowView = binding.directionArrow,
                 node = cubeNodes[state.selectedCube.id],
                 cameraNode = binding.sceneView.cameraNode
             )
         } else {
             binding.cubeInfoCard.visibility = View.GONE
         }
-
-        binding.sceneView.cameraNode.position = state.cameraOrigin
     }
 
     private fun updateCubes(cubes: List<CubeData>) {
@@ -134,13 +155,10 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
             }
         }
 
-        // Update or create new cubes
+        // create new cubes
         cubes.forEach { cubeData ->
             val existingNode = cubeNodes[cubeData.name]
-            if (existingNode != null) {
-                existingNode.position = cubeData.position
-                updateCubeColor(existingNode, cubeData.color)
-            } else {
+            if (existingNode == null) {
                 // Create new cube
                 val cubeNode = CubeNode(
                     engine = binding.sceneView.engine,
@@ -153,9 +171,10 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                     }
                     materialInstance = materialLoader.createColorInstance(color = cubeData.color)
                 }
-                updateCubeColor(cubeNode, cubeData.color)
                 binding.sceneView.addChildNode(cubeNode)
                 cubeNodes[cubeData.name] = cubeNode
+            } else {
+                updateCubeColor(existingNode, cubeData.color)
             }
         }
     }
@@ -164,15 +183,14 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
         cubeNode.materialInstance.setColor(color)
     }
 
-    private fun rotateArrowToNode(
+    private fun getNextArrowAngle(
         parentView: View,
-        arrowView: View,
         node: Node?,
         cameraNode: CameraNode
     ) {
         node?.worldPosition?.let { nodePosition ->
             cameraNode.view?.worldToScreen(nodePosition)?.let { nodeScreenPos ->
-                val arrowCenterX = parentView.x
+                val arrowCenterX = parentView.x + 50
                 val arrowCenterY = parentView.y + parentView.height / 2
 
                 viewModel.updateArrowAngle(
@@ -181,8 +199,6 @@ class PlanePlacement : Fragment(R.layout.fragment_plane_placement) {
                     nodeScreenPos.x,
                     nodeScreenPos.y
                 )
-                
-                arrowView.rotation = viewModel.state.value.arrowAngle
             }
         }
     }

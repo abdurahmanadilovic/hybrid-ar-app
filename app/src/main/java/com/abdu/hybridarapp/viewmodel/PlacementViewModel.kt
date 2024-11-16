@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abdu.hybridarapp.domain.AddCubeToViewUseCase
 import com.abdu.hybridarapp.domain.CalculateArrowAngleUseCase
+import com.abdu.hybridarapp.domain.GetInitialWorldPositionUseCase
 import com.abdu.hybridarapp.model.CubeData
 import com.abdu.hybridarapp.model.DomainCubeMapper
 import com.abdu.hybridarapp.presentation.Float3Mapper
@@ -67,7 +68,7 @@ class PlacementViewModel(
         }
     }
 
-    fun changeCubeColor(color: Color) {
+    fun changeSelectedCubeColor(color: Color) {
         val updatedCubes = _state.value.cubes.map { cube ->
             if (cube.id == _state.value.selectedCube?.id) {
                 cube.copy(color = color)
@@ -95,7 +96,6 @@ class PlacementViewModel(
 data class ARViewState(
     val cubes: List<CubeData> = emptyList(),
     val selectedCube: CubeData? = null,
-    val cameraOrigin: Float3 = Float3(0f, 0f, 0f),
     val arrowAngle: Float = 0f,
 )
 
