@@ -15,10 +15,41 @@ import kotlinx.coroutines.launch
 
 class PlacementViewModel(
     private val addCubeToViewUseCase: AddCubeToViewUseCase,
+    private val getInitialWorldPositionUseCase: GetInitialWorldPositionUseCase,
     private val calculateArrowAngleUseCase: CalculateArrowAngleUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ARViewState())
     val state: StateFlow<ARViewState> = _state
+
+    private val _configState = MutableStateFlow(ConfigState())
+    val configState: StateFlow<ConfigState> = _configState
+
+    init {
+        getAppConfig()
+    }
+
+    private fun getAppConfig() {
+        viewModelScope.launch {
+            try {
+                _configState.value = _configState.value.copy(isLoading = true)
+                val cameraOrigin = getInitialWorldPositionUseCase()
+                _configState.value = ConfigState(
+                    cameraOrigin = Float3Mapper.toFloat3(cameraOrigin),
+                    isLoading = false
+                )
+            } catch (ex: Exception) {
+                _configState.value = ConfigState(
+                    error = ex,
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    fun retryInitialization() {
+        _configState.value = ConfigState(isLoading = true)
+        getAppConfig()
+    }
 
     fun placeCube(position: Float3) {
         viewModelScope.launch {
@@ -66,4 +97,10 @@ data class ARViewState(
     val selectedCube: CubeData? = null,
     val cameraOrigin: Float3 = Float3(0f, 0f, 0f),
     val arrowAngle: Float = 0f,
+)
+
+data class ConfigState(
+    val cameraOrigin: Float3? = null,
+    val error: Throwable? = null,
+    val isLoading: Boolean = false
 )
