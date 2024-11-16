@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HybridArApp</string>
+    <string name="failed_to_initialize_ar">Failed to initialize AR</string>
+    <string name="retry">Retry</string>
 </resources>
