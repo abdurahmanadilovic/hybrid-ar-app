@@ -5,5 +5,9 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("/getInitialWorldPosition")
-    suspend fun getInitialWorldPosition(): Position3d
+    suspend fun getInitialWorldPosition(): LocationDTO
+
+    companion object {
+        const val DEV_URL = "http://localhost:8080"
+    }
 }
