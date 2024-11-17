@@ -4,4 +4,8 @@
     <string name="retry">Retry</string>
     <string name="an_error_occurred">An error occurred</string>
     <string name="format_3d_position">X: %.2f, Y: %.2f, Z: %.2f</string>
+    <string name="tracked_planes">Tracked Planes</string>
+    <string name="zero">0</string>
+    <string name="direction_arrow">direction arrow</string>
+    <string name="add_cube_button">add cube button</string>
 </resources>

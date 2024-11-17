@@ -10,6 +10,8 @@ import dev.romainguy.kotlin.math.Float3
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.google.ar.core.Plane
+import io.github.sceneview.ar.arcore.position
 
 class PlacementViewModel(
     private val addCubeToViewUseCase: com.abdu.hybridapp.domain.AddCubeToViewUseCase,
@@ -21,6 +23,9 @@ class PlacementViewModel(
 
     private val _configState = MutableStateFlow(ConfigState())
     val configState: StateFlow<ConfigState> = _configState
+
+    var trackedPlanes = listOf<Plane>()
+    private var currentPlaneIndex = 0
 
     init {
         getAppConfig()
@@ -87,6 +92,33 @@ class PlacementViewModel(
             targetY
         )
         _state.value = _state.value.copy(arrowAngle = angle)
+    }
+
+    fun updateTrackedPlanes(planes: List<Plane>) {
+        if (planes.isEmpty()) return
+        trackedPlanes = planes
+        currentPlaneIndex = currentPlaneIndex.coerceIn(0, trackedPlanes.size - 1)
+    }
+
+    fun placeNextCube() {
+        val trackedPlanes = trackedPlanes.filter { it.trackingState == com.google.ar.core.TrackingState.TRACKING }
+        if (trackedPlanes.isEmpty()) return
+
+        val plane = trackedPlanes[currentPlaneIndex % trackedPlanes.size]
+        val planeCenter = plane.centerPose.position
+        
+        // Generate random offset within the plane boundaries
+        val randomX = (Math.random() * 0.6 - 0.3).toFloat()
+        val randomZ = (Math.random() * 0.6 - 0.3).toFloat()
+        
+        val position = Float3(
+            planeCenter.x + randomX,
+            planeCenter.y,
+            planeCenter.z + randomZ
+        )
+        
+        placeCube(position)
+        currentPlaneIndex = (currentPlaneIndex + 1) % trackedPlanes.size
     }
 }
 

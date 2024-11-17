@@ -11,8 +11,6 @@ import com.abdu.hybridarapp.model.CubeUIModel
 import com.google.ar.core.Config
 import dev.romainguy.kotlin.math.Float3
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
-import io.github.sceneview.ar.arcore.position
-import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.loaders.MaterialLoader
 import io.github.sceneview.material.setColor
 import io.github.sceneview.node.CameraNode
@@ -73,24 +71,16 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
             configureSession { session, config ->
                 config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
                 config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
-                config.lightEstimationMode = Config.LightEstimationMode.DISABLED
+                config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
             }
             cameraNode.position = cameraOrigin
             onFrame = {
                 updateUI(viewModel.state.value)
                 updateCubes(viewModel.state.value.cubes)
+                updatePlaneCount()
+                viewModel.updateTrackedPlanes(frame?.getUpdatedPlanes()?.toList() ?: emptyList())
             }
             planeRenderer.isVisible = true
-
-            onTouchEvent = { event, hitResult ->
-                if (hitResult == null) {
-                    binding.sceneView.frame?.hitTest(event.x, event.y)?.firstOrNull()?.let {
-                        val anchor = AnchorNode(binding.sceneView.engine, it.createAnchor())
-                        viewModel.placeCube(anchor.worldPosition)
-                    }
-                }
-                false
-            }
         }
     }
 
@@ -100,11 +90,7 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
         }
 
         binding.addCubeButton.setOnClickListener {
-            val planes = binding.sceneView.frame?.getUpdatedPlanes()
-            planes?.firstOrNull()?.let {
-                viewModel.placeCube(it.centerPose.position)
-            }
-
+            viewModel.placeNextCube()
         }
 
         binding.colorCircle1.setOnClickListener {
@@ -159,23 +145,22 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
 
         // create new cubes
         cubes.forEach { cubeData ->
-            val existingNode = cubeNodes[cubeData.name]
+            val existingNode = cubeNodes[cubeData.id]
             if (existingNode == null) {
                 // Create new cube
                 val cubeNode = CubeNode(
                     engine = binding.sceneView.engine,
+                    materialInstance = materialLoader.createColorInstance(cubeData.color),
                     size = Float3(0.2f, 0.2f, 0.2f)
                 ).apply {
                     position = cubeData.position
                     onSingleTapUp = {
-                        viewModel.selectCube(cubeData.name)
+                        viewModel.selectCube(cubeData.id)
                         true
                     }
-                    materialInstance =
-                        materialLoader.createColorInstance(color = cubeData.color, 0f, 0f, 0f)
                 }
                 binding.sceneView.addChildNode(cubeNode)
-                cubeNodes[cubeData.name] = cubeNode
+                cubeNodes[cubeData.id] = cubeNode
             } else {
                 updateCubeColor(existingNode, cubeData.color)
             }
@@ -204,6 +189,10 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
                 )
             }
         }
+    }
+
+    private fun updatePlaneCount() {
+        binding.planeCountText.text = viewModel.trackedPlanes.size.toString()
     }
 
     override fun onDestroy() {
