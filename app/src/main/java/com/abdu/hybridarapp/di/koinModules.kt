@@ -1,8 +1,8 @@
 package com.abdu.hybridarapp.di
 
-import com.abdu.hybridapp.domain.*
 import com.abdu.hybridapp.data.ApiService
 import com.abdu.hybridapp.data.NodesRepositoryImpl
+import com.abdu.hybridapp.domain.*
 import com.abdu.hybridarapp.presentation.PlacementViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val domainModule = module {
     singleOf(::GetInitialWorldPositionImpl) { bind<GetInitialWorldPositionUseCase>() }
-    singleOf(::CreateAndAddCubeImpl) { bind<CreateAndAddCubeUseCase>() }
+    singleOf(::CreateCubeImpl) { bind<CreateCubeUseCase>() }
     singleOf(::AddCubeToViewImpl) { bind<AddCubeToViewUseCase>() }
     singleOf(::CalculateArrowAngle) { bind<CalculateArrowAngleUseCase>() }
 }
@@ -35,7 +35,7 @@ val networkModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://localhost:8080/") // Replace with your actual base URL
+            .baseUrl(ApiService.DEV_URL) // Replace with your actual base URL
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -6,30 +6,37 @@ import org.junit.Test
 
 class AddCubeToViewUseCaseTest {
     @Test
-    fun `when adding cube, should delegate to CreateAndAddCube use case`() = runBlocking {
-        // Given
-        val tapPosition = Position3d(1.0f, 1.0f, 1.0f)
-        val expectedCube = Cube.empty()
-        val mockCreateAndAddCube = MockCreateAndAddCubeUseCase(expectedCube)
-        val useCase = AddCubeToViewImpl(mockCreateAndAddCube)
+    fun `when adding cube, should fetch origin position and pass it to CreateAndAddCube use case`() =
+        runBlocking {
+            // Given
+            val tapPosition = Position3d(1f, 1f, 1f)
+            val originPosition = Position3d(1f, 2f, 3f)
 
-        // When
-        val result = useCase(tapPosition)
+            val mockCreateCube = MockCreateCubeUseCase()
 
-        // Then
-        assertEquals(expectedCube, result)
-        assertEquals(tapPosition, mockCreateAndAddCube.lastTapPosition)
-    }
+            val mockGetOriginPosition = MockGetInitialWorldPositionUseCase(originPosition)
+            val addCubeToView = AddCubeToViewImpl(mockCreateCube, mockGetOriginPosition)
+
+            // When
+            val result = addCubeToView(tapPosition)
+
+            // Then
+            assertEquals(originPosition, mockCreateCube.givenOriginPosition)
+        }
 }
 
-private class MockCreateAndAddCubeUseCase(
-    private val cubeToReturn: Cube
-) : CreateAndAddCubeUseCase {
-    var lastTapPosition: Position3d? = null
+class MockGetInitialWorldPositionUseCase(
+    private val positionToReturn: Position3d
+) : GetInitialWorldPositionUseCase {
+    override suspend fun invoke(): Position3d = positionToReturn
+}
+
+private class MockCreateCubeUseCase : CreateCubeUseCase {
+    var givenOriginPosition: Position3d? = null
         private set
 
-    override suspend fun invoke(tapLocation: Position3d): Cube {
-        lastTapPosition = tapLocation
-        return cubeToReturn
+    override suspend fun invoke(tapLocation: Position3d, originPosition: Position3d): Cube {
+        givenOriginPosition = originPosition
+        return Cube.empty().copy(position = Position3d.combine(tapLocation, originPosition))
     }
 }

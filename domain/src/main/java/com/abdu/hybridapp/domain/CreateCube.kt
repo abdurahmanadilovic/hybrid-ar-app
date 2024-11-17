@@ -2,14 +2,15 @@ package com.abdu.hybridapp.domain
 
 import kotlin.random.Random
 
-class CreateAndAddCubeImpl(
-    private val getInitialWorldPosition: GetInitialWorldPositionUseCase
-) : CreateAndAddCubeUseCase {
-    override suspend operator fun invoke(tapLocation: Position3d): Cube {
+class CreateCubeImpl : CreateCubeUseCase {
+    override suspend operator fun invoke(
+        tapLocation: Position3d,
+        originPosition: Position3d
+    ): Cube {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomName = (1..8).map { chars.random() }.joinToString("")
 
-        val newLocation = Position3d.combine(getInitialWorldPosition(), tapLocation)
+        val newLocation = Position3d.combine(tapLocation, originPosition)
 
         val color = when (Random.nextInt(5)) {
             0 -> Color.Red
@@ -18,7 +19,6 @@ class CreateAndAddCubeImpl(
             3 -> Color.Yellow
             else -> Color.Magenta
         }
-
 
         return Cube(name = randomName, position = newLocation, color = color)
     }

@@ -4,8 +4,8 @@ interface GetInitialWorldPositionUseCase {
     suspend operator fun invoke(): Position3d
 }
 
-interface CreateAndAddCubeUseCase {
-    suspend operator fun invoke(tapLocation: Position3d): Cube
+interface CreateCubeUseCase {
+    suspend operator fun invoke(tapLocation: Position3d, originPosition: Position3d): Cube
 }
 
 interface AddCubeToViewUseCase {
