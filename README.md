@@ -102,18 +102,21 @@ Both libraries are based on ARCore, which is the official Google library for AR 
 
 ### Camera origin offset
 
-The camera origin offset is not supported in SceneView. Claim is that the ARCore controls the camera position, 
-from SceneView's code comments on `ARCoreCameraNode`:
->Represents a virtual camera, which determines the perspective through which the scene is viewed.
+The camera origin offset is not supported in SceneView. Claim is that the ARCore controls the camera
+position,
+from
+SceneView's [code comments](https://github.com/SceneView/sceneview-android/blob/2969a2c5ef00e5e5a0bccb29053e33fd93fcc47d/arsceneview/src/main/java/io/github/sceneview/ar/node/ARCameraNode.kt#L4)
+on `ARCameraNode`:
+> Represents a virtual camera, which determines the perspective through which the scene is viewed.
 >
 > If the camera is part of an [ARSceneView], then the camera automatically tracks the
- camera pose from ARCore.
+> camera pose from ARCore.
 > The following methods will throw [ ] when called:
 > - [parent] - CameraNode's parent cannot be changed, it is always the scene.
 > - [position] - CameraNode's position cannot be changed, it is controlled by the ARCore camera
-> pose.
+    > pose.
 > - [rotation] - CameraNode's rotation cannot be changed, it is controlled by the ARCore camera
-> pose.
+    > pose.
 >
 > All other functionality in Node is supported. You can access the position and rotation of the
 > camera, assign a collision shape to the camera, or add children to the camera. Disabling the
