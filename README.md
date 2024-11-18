@@ -30,17 +30,19 @@ clean architecture principles.
 
 - **Repositories**: Implement repository interfaces and manage data operations
 - **Models**: Data transfer objects and mapping logic
--
 
 #### Presentation Layer
 
 - **Views**: UI components responsible for rendering the AR experience and user interface
 - **ViewModels**: Handle UI logic and state management, communicating between Views and Use Cases
 
-### Key Use cases
+### Use cases
 
-- GetInitialWorldPosition: Get the initial world position
-- CreateAndAddCube: Creates and adds a new cube at the specified tap location
+- `GetInitialWorldPositionUseCase`: Get the initial world position
+- `CreateCubeUseCase`: Creates a new cube with random name, color and fixed sample size
+- `AddCubeToViewUseCase`: Combines `GetInitialWorldPositionUseCase` and `CreateCubeUseCase` to
+  create
+  a new cube and forward origin offset
 - Calculate angle of the arrow pointing to the current selected cube
 
 ### Modules
@@ -59,7 +61,7 @@ clean architecture principles.
 
 ## Unit Tests
 
-The project includes comprehensive unit tests for:
+The project includes unit tests for:
 
 - Use Cases: Testing business logic and data flow
 - Repositories: Testing data operations and mapping
@@ -73,4 +75,48 @@ Run tests using:
 
 ## Getting Started
 
-[]
+### Configure API URL
+
+The default development URL is defined in `ApiService.kt` companion object. To change it for your
+environment:
+
+1. Update the `DEV_URL` constant in `ApiService.kt` to match your API endpoint:
+
+```kt
+companion object {
+    val DEV_URL = "https://your-api-url"
+}
+```
+
+2. Open project folder in Android Studio and run the app module
+
+## Questions
+
+### Why SceneView instead of Sceneform?
+
+Sceneform (originally developed by Google) is deprecated and no longer maintained. SceneView is the
+only successor of Sceneform.
+Both libraries are based on ARCore, which is the official Google library for AR development.
+
+## Limitations
+
+### Camera origin offset
+
+The camera origin offset is not supported in SceneView. Claim is that the ARCore controls the camera position, 
+from SceneView's code comments on `ARCoreCameraNode`:
+>Represents a virtual camera, which determines the perspective through which the scene is viewed.
+>
+> If the camera is part of an [ARSceneView], then the camera automatically tracks the
+ camera pose from ARCore.
+> The following methods will throw [ ] when called:
+> - [parent] - CameraNode's parent cannot be changed, it is always the scene.
+> - [position] - CameraNode's position cannot be changed, it is controlled by the ARCore camera
+> pose.
+> - [rotation] - CameraNode's rotation cannot be changed, it is controlled by the ARCore camera
+> pose.
+>
+> All other functionality in Node is supported. You can access the position and rotation of the
+> camera, assign a collision shape to the camera, or add children to the camera. Disabling the
+> camera turns off rendering.
+
+

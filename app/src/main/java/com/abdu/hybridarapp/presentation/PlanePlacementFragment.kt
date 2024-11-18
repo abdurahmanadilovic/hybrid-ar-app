@@ -33,6 +33,7 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPlanePlacementBinding.bind(view)
         setupUI()
+        setupSceneView()
         observeConfigState()
     }
 
@@ -42,13 +43,13 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
                 when {
                     config.isLoading -> {
                         binding.loadingGroup.visibility = View.VISIBLE
-                        binding.contentGroup.visibility = View.GONE
+                        binding.contentGroup.visibility = View.INVISIBLE
                         binding.errorGroup.visibility = View.GONE
                     }
 
                     config.error != null -> {
                         binding.loadingGroup.visibility = View.GONE
-                        binding.contentGroup.visibility = View.GONE
+                        binding.contentGroup.visibility = View.INVISIBLE
                         binding.errorGroup.visibility = View.VISIBLE
                         binding.errorText.text =
                             config.error.message ?: getString(R.string.an_error_occurred)
@@ -58,7 +59,6 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
                         binding.loadingGroup.visibility = View.GONE
                         binding.errorGroup.visibility = View.GONE
                         binding.contentGroup.visibility = View.VISIBLE
-                        setupSceneView()
                     }
                 }
             }

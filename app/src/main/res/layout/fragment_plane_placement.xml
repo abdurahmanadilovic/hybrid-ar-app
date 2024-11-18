@@ -221,7 +221,7 @@
         android:id="@+id/contentGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:constraint_referenced_ids="sceneView,addCubeButton,cubeInfoCard,planeInfoCard" />
+        android:visibility="visible"
+        app:constraint_referenced_ids="addCubeButton,cubeInfoCard,planeInfoCard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
