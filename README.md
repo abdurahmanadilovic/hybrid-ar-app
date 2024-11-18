@@ -89,7 +89,7 @@ companion object {
 }
 ```
 
-2. Open project folder in Android Studio and run the app module
+2. Open project folder in Android Studio (Android Studio Koala | 2024.1.1 or newer) and run the app module
 
 ## Questions
 
