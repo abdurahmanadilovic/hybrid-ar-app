@@ -5,12 +5,10 @@ import kotlin.random.Random
 class CreateCubeImpl : CreateCubeUseCase {
     override suspend operator fun invoke(
         tapLocation: Position3d,
-        originPosition: Position3d
+        offsetOrigin: Position3d
     ): Cube {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomName = (1..8).map { chars.random() }.joinToString("")
-
-        val newLocation = Position3d.combine(tapLocation, originPosition)
 
         val color = when (Random.nextInt(5)) {
             0 -> Color.Red
@@ -20,6 +18,11 @@ class CreateCubeImpl : CreateCubeUseCase {
             else -> Color.Magenta
         }
 
-        return Cube(name = randomName, position = newLocation, color = color)
+        return Cube(
+            name = randomName,
+            position = tapLocation,
+            offsetOrigin = offsetOrigin,
+            color = color
+        )
     }
 }

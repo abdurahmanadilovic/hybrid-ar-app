@@ -16,6 +16,7 @@ class DomainCubeMapperTest {
         val domainCube = Cube(
             name = "test_cube",
             position = Position3d(1f, 2f, 3f),
+            offsetOrigin = Position3d(0f, 0f, 0f),
             color = DomainColor(red = 1f, green = 0f, blue = 0f)
         )
 

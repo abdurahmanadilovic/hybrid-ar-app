@@ -58,14 +58,14 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
                         binding.loadingGroup.visibility = View.GONE
                         binding.errorGroup.visibility = View.GONE
                         binding.contentGroup.visibility = View.VISIBLE
-                        setupSceneView(config.cameraOrigin)
+                        setupSceneView()
                     }
                 }
             }
         }
     }
 
-    private fun setupSceneView(cameraOrigin: Float3) {
+    private fun setupSceneView() {
         materialLoader = MaterialLoader(binding.sceneView.engine, requireContext())
         binding.sceneView.apply {
             configureSession { session, config ->
@@ -73,7 +73,6 @@ class PlanePlacementFragment : Fragment(R.layout.fragment_plane_placement) {
                 config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
                 config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
             }
-            cameraNode.position = cameraOrigin
             onFrame = {
                 updateUI(viewModel.state.value)
                 updateCubes(viewModel.state.value.cubes)

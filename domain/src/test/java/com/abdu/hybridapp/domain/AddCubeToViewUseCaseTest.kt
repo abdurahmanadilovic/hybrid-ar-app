@@ -35,8 +35,8 @@ private class MockCreateCubeUseCase : CreateCubeUseCase {
     var givenOriginPosition: Position3d? = null
         private set
 
-    override suspend fun invoke(tapLocation: Position3d, originPosition: Position3d): Cube {
-        givenOriginPosition = originPosition
-        return Cube.empty().copy(position = Position3d.combine(tapLocation, originPosition))
+    override suspend fun invoke(tapLocation: Position3d, offsetOrigin: Position3d): Cube {
+        givenOriginPosition = offsetOrigin
+        return Cube.empty().copy(position = Position3d.combine(tapLocation, offsetOrigin))
     }
 }

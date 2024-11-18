@@ -11,7 +11,6 @@ data class Position3d(val x: Float, val y: Float, val z: Float) {
 data class Color(val red: Float, val green: Float, val blue: Float) {
     companion object {
         val White = Color(1f, 1f, 1f)
-        val Black = Color(0f, 0f, 0f)
         val Red = Color(1f, 0f, 0f)
         val Green = Color(0f, 1f, 0f)
         val Blue = Color(0f, 0f, 1f)
@@ -20,14 +19,23 @@ data class Color(val red: Float, val green: Float, val blue: Float) {
     }
 }
 
-data class Cube(val name: String, val position: Position3d, val color: Color) {
+data class Cube(
+    val name: String,
+    val position: Position3d,
+    val offsetOrigin: Position3d,
+    val color: Color
+) {
     fun isEmpty(): Boolean {
         return this.name == "empty"
     }
 
+    fun positionWithOffsetOrigin(): Position3d {
+        return Position3d.combine(this.position, this.offsetOrigin)
+    }
+
     companion object {
         fun empty(): Cube {
-            return Cube("empty", Position3d(0f, 0f, 0f), Color.White)
+            return Cube("empty", Position3d(0f, 0f, 0f), Position3d(0f, 0f, 0f), Color.White)
         }
     }
 }
