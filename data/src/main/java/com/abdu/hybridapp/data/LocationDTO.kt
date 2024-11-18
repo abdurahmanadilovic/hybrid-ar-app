@@ -1,9 +1,17 @@
 package com.abdu.hybridapp.data
 
-data class LocationDTO(val location: Location)
+import com.google.gson.annotations.SerializedName
+
+data class LocationDTO(
+    @SerializedName("Location")
+    val location: Location
+)
 
 data class Location(
-    val X: Float,
-    val Y: Float,
-    val Z: Float
+    @SerializedName("X")
+    val x: Float,
+    @SerializedName("Y")
+    val y: Float,
+    @SerializedName("Z")
+    val z: Float
 )

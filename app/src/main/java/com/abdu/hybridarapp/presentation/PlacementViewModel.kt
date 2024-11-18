@@ -3,20 +3,23 @@ package com.abdu.hybridarapp.presentation
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abdu.hybridapp.domain.AddCubeToViewUseCase
+import com.abdu.hybridapp.domain.CalculateArrowAngleUseCase
+import com.abdu.hybridapp.domain.GetInitialWorldPositionUseCase
 import com.abdu.hybridarapp.model.CubeUIModel
 import com.abdu.hybridarapp.model.DomainCubeMapper
 import com.abdu.hybridarapp.model.Position3dMapper
+import com.google.ar.core.Plane
 import dev.romainguy.kotlin.math.Float3
+import io.github.sceneview.ar.arcore.position
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.google.ar.core.Plane
-import io.github.sceneview.ar.arcore.position
 
 class PlacementViewModel(
-    private val addCubeToViewUseCase: com.abdu.hybridapp.domain.AddCubeToViewUseCase,
-    private val getInitialWorldPositionUseCase: com.abdu.hybridapp.domain.GetInitialWorldPositionUseCase,
-    private val calculateArrowAngleUseCase: com.abdu.hybridapp.domain.CalculateArrowAngleUseCase
+    private val addCubeToViewUseCase: AddCubeToViewUseCase,
+    private val getInitialWorldPositionUseCase: GetInitialWorldPositionUseCase,
+    private val calculateArrowAngleUseCase: CalculateArrowAngleUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ARViewState())
     val state: StateFlow<ARViewState> = _state
@@ -54,7 +57,7 @@ class PlacementViewModel(
         getAppConfig()
     }
 
-    fun placeCube(position: Float3) {
+    private fun placeCube(position: Float3) {
         viewModelScope.launch {
             val newDomainCube = addCubeToViewUseCase(Position3dMapper.from(position))
             val newUICube = DomainCubeMapper.toCubeUIModel(newDomainCube)
@@ -101,22 +104,23 @@ class PlacementViewModel(
     }
 
     fun placeNextCube() {
-        val trackedPlanes = trackedPlanes.filter { it.trackingState == com.google.ar.core.TrackingState.TRACKING }
+        val trackedPlanes =
+            trackedPlanes.filter { it.trackingState == com.google.ar.core.TrackingState.TRACKING }
         if (trackedPlanes.isEmpty()) return
 
         val plane = trackedPlanes[currentPlaneIndex % trackedPlanes.size]
         val planeCenter = plane.centerPose.position
-        
+
         // Generate random offset within the plane boundaries
         val randomX = (Math.random() * 0.6 - 0.3).toFloat()
         val randomZ = (Math.random() * 0.6 - 0.3).toFloat()
-        
+
         val position = Float3(
             planeCenter.x + randomX,
             planeCenter.y,
             planeCenter.z + randomZ
         )
-        
+
         placeCube(position)
         currentPlaneIndex = (currentPlaneIndex + 1) % trackedPlanes.size
     }

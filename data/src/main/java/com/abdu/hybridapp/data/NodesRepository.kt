@@ -16,9 +16,9 @@ class NodesRepositoryImpl(
         val finalPosition = initialPosition ?: apiService.getInitialWorldPosition()
         saveInitialPosition(finalPosition)
         return Position3d(
-            x = finalPosition.location.X,
-            y = finalPosition.location.Y,
-            z = finalPosition.location.Z
+            x = finalPosition.location.x,
+            y = finalPosition.location.y,
+            z = finalPosition.location.z
         )
     }
 }
