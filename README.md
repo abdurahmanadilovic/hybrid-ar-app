@@ -1,7 +1,6 @@
 # Hybrid AR App
 
-An Augmented Reality application implementing MVVM (Model-View-ViewModel) architecture pattern with
-clean architecture principles.
+An Augmented Reality application that allows the user to place cubes on detected planes.
 
 ## Architecture Overview
 
@@ -89,7 +88,8 @@ companion object {
 }
 ```
 
-2. Open project folder in Android Studio (Android Studio Koala | 2024.1.1 or newer) and run the app module
+2. Open project folder in Android Studio (Android Studio Koala | 2024.1.1 or newer) and run the app
+   module
 
 ## Questions
 
