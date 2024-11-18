@@ -54,7 +54,8 @@ clean architecture principles.
 ## Dependencies
 
 - ARCore for AR functionality
-- SceneView as a replacement for deprecated Sceneform
+- [SceneView](https://github.com/SceneView/sceneview-android) as a replacement for
+  deprecated [Sceneform](https://developers.google.com/sceneform/develop)
 - Koin for dependency injection
 - Coroutines for asynchronous operations
 - JUnit for testing
